@@ -1,5 +1,4 @@
 import React,{Component} from "react";
-import {getStringFromDate} from "../static/address_lib";
 
 class TaskData extends Component
 {
@@ -10,12 +9,12 @@ class TaskData extends Component
 
     set startTime(time)
     {
-        this.startTime=getStringFromDate(time);
+        this.startTime=time;
     }
 
     set workTime(time)
     {
-        this.workTime=getStringFromDate(time);
+        this.workTime=time;
     }
 
     addtheme(theme)

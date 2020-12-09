@@ -22,21 +22,25 @@ var firebaseConfig = {
   {
       console.log(e.message);
   }
-  var initialdate=new Date();
-  const initialtask=new TaskData(initialdate,initialdate,[],"");
 
-  function fireReducer(state=initialtask ,action)
+  const initial={
+    login:false,
+    username:"sign in",
+    email:""
+  };
+
+  function fireReducer(state=initial ,action)
   {
       switch(action.type)
       {
-          case "UPDATE_USER":
+          case "UPDATE_USER_INFO":
               return action.value;
         default:
             return state;
       }
   }
 
-  export function initStore(state=initialtask)
+  export function initStore(state=initial)
   {
       return createStore(fireReducer,state,applyMiddleware(thunkMiddleware));
   }

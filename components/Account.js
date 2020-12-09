@@ -7,7 +7,7 @@ class Account extends Component
     constructor(props)
     {
         super(props);
-
+        this.login_check=this.login_check.bind(this);
     }
 
     login()
@@ -32,7 +32,7 @@ class Account extends Component
     logout()
     {
         console.log("Log out");
-        firebase.auth().logout();
+        firebase.auth().signOut();
         this.props.dispatch({
             type:"UPDATE_USER_INFO",
             value:{
@@ -59,11 +59,7 @@ class Account extends Component
     render()
     {
         return(
-            <p className="login">
-                <span className="account" onClick={this.login_check}>
-                    LOGINED:{this.props.username}
-                </span>
-            </p>
+            <button onClick={this.login_check}>Login</button>
         );
     }
 }
