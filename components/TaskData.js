@@ -8,19 +8,14 @@ class TaskData extends Component
         super(props);
     }
 
-    get timeSpan()
-    {
-        return new Date(this.endtime)-new Date(this.starttime);
-    }
-
     set startTime(time)
     {
-        this.starttime=getStringFromDate(time);
+        this.startTime=getStringFromDate(time);
     }
 
-    set endTime(time)
+    set workTime(time)
     {
-        this.endtime=getStringFromDate(time);
+        this.workTime=getStringFromDate(time);
     }
 
     addtheme(theme)
