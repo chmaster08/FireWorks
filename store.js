@@ -26,15 +26,27 @@ var firebaseConfig = {
   const initial={
     login:false,
     username:"sign in",
-    email:""
+    email:"",
+    workdataList:[],
   };
 
   function fireReducer(state=initial ,action)
   {
       switch(action.type)
       {
-          case "UPDATE_USER_INFO":
-              return action.value;
+            case "UPDATE_USER_INFO":
+                return Object.assign({},state,{
+                    login:action.value.login,
+                    username:action.value.username,
+                    email:action.value.email,
+                });
+            case "ADD_WORKDATA":
+                return Object.assign({},state,{
+                    workdataList:[
+                        ...state.workdataList,
+                        action.workdata,
+                    ]
+                });
         default:
             return state;
       }
