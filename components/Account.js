@@ -59,7 +59,10 @@ class Account extends Component
     render()
     {
         return(
-            <button onClick={this.login_check}>Login</button>
+            <div>
+                <button onClick={this.login_check}>{this.props.login ? "Logout" : "Login"}</button>
+
+            </div>
         );
     }
 }

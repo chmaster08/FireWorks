@@ -26,7 +26,7 @@ class Lib
         var second_str = date.getSeconds();
         
         
-        format_str = 'YYYY-MM-DD hh:mm:ss';
+        let format_str = 'YYYY-MM-DD hh:mm:ss';
         format_str = format_str.replace(/YYYY/g, year_str);
         format_str = format_str.replace(/MM/g, month_str);
         format_str = format_str.replace(/DD/g, day_str);
