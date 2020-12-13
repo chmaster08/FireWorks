@@ -16,11 +16,13 @@ class WorkRecorder extends Component
             minutes:0,
             second:0,
             theme:"",
-            themehistory:[],
+            selectedtheme:[],
+            themehistorylist:[],
             isEnable:false,
         }
 
         this.themes=[];
+        this.themehistory=[];
 
         this.startCount=this.startCount.bind(this);
         this.stopCount=this.stopCount.bind(this);
@@ -31,7 +33,9 @@ class WorkRecorder extends Component
         this.registerDB=this.registerDB.bind(this);
         this.getThemeListData=this.getThemeListData.bind(this);
         this.UpdateThemeList=this.UpdateThemeList.bind(this);
-        this.registerNewTheme=this.registerNewTheme.bind(this);
+        this.updateSelectedThemeView=this.updateSelectedThemeView.bind(this);
+        this.updateThemeHistoryView=this.updateThemeHistoryView.bind(this);
+        this.onChangeSelectedHistory=this.onChangeSelectedHistory.bind(this);
         this.getThemeListData();
     }
 
@@ -110,46 +114,85 @@ class WorkRecorder extends Component
         ref.orderByKey().on("value",(snapshot)=>{
             let d=Lib.deepcopy(snapshot.val());
             console.log(d);
-            this.setState({themehistory:d});
+            if(d!=null)
+            {
+                this.addThemeHistory(d);
+            }
             });
+
+        console.log(this.themehistory);
     }
 
     UpdateThemeList()
     {
         console.log(this.themes);
-        if(this.state.themehistory==null)
+        let senddata=this.themehistory;
+        if(this.themehistory==null)
         {
             for(let item in this.themes)
             {
-                this.registerNewTheme(item);
+                senddata.push(this.themes[item]);
             }
         }
         else
         {
             for(let item in this.themes)
             {
-                if(this.state.themehistory.indexOf(item)==-1)
+                if(this.themehistory.indexOf(this.themes[item])==-1)
                 {
-                    this.registerNewTheme(item);
+                    senddata.push(this.themes[item]);
                 }
             }
         }
+        this.themehistory=senddata;
+        console.log(this.themehistory);
+        let db=firebase.database();
+        let ref=db.ref("FireWorks/"+Lib.encodeEmail(this.props.email)+"/ThemeList");
+        
+        ref.set(this.themehistory);
+
     }
 
-    registerNewTheme(item)
+    addThemeHistory(items)
     {
-        console.log("theme"+this.themes[item]);
-
-        let db=firebase.database();
-        let index=this.state.themehistory==null?0:this.state.themehistory.length;
-        let ref=db.ref("FireWorks/"+Lib.encodeEmail(this.props.email)+"/ThemeList/"+index);
-        console.log(ref);
-        let data=
+        for(let i in items)
         {
-            item:this.themes[item],
-        };
-        ref.set(data);
-        this.state.themehistory.concat(this.themes[item]);
+            this.themehistory.push(items[i]);
+        }
+        this.updateSelectedThemeView();
+        this.updateThemeHistoryView();
+    }
+
+    addTheme(theme)
+    {
+        if(this.themes.indexOf(theme)==-1)
+        {
+            this.themes.push(theme);
+        }
+    }
+
+
+    updateSelectedThemeView()
+    {
+        let dom=[];
+        for(let item in this.themes)
+        {
+            dom.push(
+                <p key={item}>{this.themes[item]}</p>
+            );
+        }
+        this.setState({selectedtheme:dom});
+    }
+
+    updateThemeHistoryView()
+    {
+        let dom=[];
+        for(let item in this.themehistory)
+        {
+            dom.push(<option value={this.themehistory[item]}>{this.themehistory[item]}</option>);
+        }
+        this.setState({themehistorylist:dom});
+
     }
 
     
@@ -162,9 +205,14 @@ class WorkRecorder extends Component
                 minutes:0,
                 second:0,
                 theme:"",
+                selectedtheme:[],
+                themehistorylist:[],
                 isEnable:false,
             }
         );
+        this.themes=[];
+        this.themehistory=[],
+        this.getThemeListData();
     }
 
     onChangeTheme(e)
@@ -175,10 +223,17 @@ class WorkRecorder extends Component
     {
         if(this.state.theme != "" && this.state.theme != undefined)
         {
-            this.themes.push(this.state.theme);
+            this.addTheme(this.state.theme);
             this.setState({theme:""});
+            this.updateSelectedThemeView();
         }
         
+    }
+
+    onChangeSelectedHistory(e)
+    {
+        this.addTheme(e.target.value);
+        this.updateSelectedThemeView();
     }
 
     render()
@@ -194,6 +249,12 @@ class WorkRecorder extends Component
                 </div>
                 <input type="text" size="30" value={this.state.theme} onChange={this.onChangeTheme}/>
                 <button onClick={this.AddThemeAction}>AddTheme</button>
+                <select size="10" onChange={this.onChangeSelectedHistory}>
+                    {this.state.themehistorylist}
+                </select>
+                <div>
+                    {this.state.selectedtheme}
+                </div>
                 <button onClick={this.registerWork}>Register</button>
             </div>
         );
