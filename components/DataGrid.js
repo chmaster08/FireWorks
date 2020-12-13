@@ -12,7 +12,6 @@ class DataGrid extends Component
     constructor(props)
     {
         super(props);
-        console.log("constructot");
         if(this.props.login==false)
         {
             Router.push("/");
@@ -21,34 +20,32 @@ class DataGrid extends Component
         {
             dom:[],
         }
+
+        this.datalist=[];
         this.onRefreshTable=this.onRefreshTable.bind(this);
-        this.setDataGrid=this.setDataGrid.bind(this);
+        this.updateDataTable=this.updateDataTable.bind(this);
+        this.setDataList=this.setDataList.bind(this);
+        this.updateDataTable();
         console.log("end constructor");
  
     }
 
-    setDataGrid()
+    updateDataTable()
     {
-        console.log("Setadata");
-        let datalist=[];
-        datalist=this.getDataListFromDB();
-        console.log(datalist);
-        let domlist=[];
-        for(let i in datalist)
-        {
-            console.log(i);
-            console.log(datalist[i]);
-            domlist.push(
-                <tr key={i}>
-                        <td>{this.getTagDOM(datalist[i].themes)}</td>
-                        <td>{datalist[i].worktime}</td>
-                        <td>{datalist[i].starttime}</td>
-                        <td>{datalist[i].memo}</td>
-                </tr>
-            );
-        }
-        console.log(domlist);
-        this.setState({dom:domlist});
+        let email=Lib.encodeEmail(this.props.email);
+        let db=firebase.database();
+        let ref=db.ref('FireWorks/'+Lib.encodeEmail(this.props.email)+'/WorkDataList');
+        let self=this;
+        ref.on("value",(snapshot)=>{
+            let d=Lib.deepcopy(snapshot.val());
+            console.log(d);
+            if(d!=null)
+            {
+                this.setDataList(d);
+            }
+            });
+        console.log(this.datalist);
+        
     }
 
     getTagDOM(themes)
@@ -61,33 +58,29 @@ class DataGrid extends Component
         return ret.join(',');
     }
 
-    getDataListFromDB()
+    setDataList(data)
     {
-        let ret;
-        let email=Lib.encodeEmail(this.props.email);
-        let db=firebase.database();
-        let ref=db.ref('FireWorks/'+Lib.encodeEmail(this.props.email)+'/WorkDataList');
-        let self=this;
-        ref.orderByKey().on("value",(snapshot)=>{
-            let d=Lib.deepcopy(snapshot.val());
-            console.log(d);
-            if(d!=null)
-            {
-                ret=d;
-            }
-            });
-        return ret;
+        let domlist=[];
+        for(let i in data)
+        {
+            console.log(i);
+            console.log(data[i]);
+            domlist.push(
+                <tr key={i}>
+                        <td>{this.getTagDOM(data[i].themes)}</td>
+                        <td>{data[i].worktime}</td>
+                        <td>{data[i].starttime}</td>
+                        <td>{data[i].memo}</td>
+                </tr>
+            );
+        }
+        this.setState({dom:domlist});
     }
 
     onRefreshTable(e)
     {
-        this.setDataGrid();
-    }
-
-    componentWillMount()
-    {
-        this.setDataGrid();
-        console.log("COmp");
+        this.datalist=[];
+        this.updateDataTable();
     }
 
     render()
