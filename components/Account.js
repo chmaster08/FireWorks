@@ -7,7 +7,20 @@ class Account extends Component
     constructor(props)
     {
         super(props);
+        this.state=
+        {
+            loading:false,
+            email:"",
+            password:"",
+        }
+
         this.login_check=this.login_check.bind(this);
+        this.login=this.login.bind(this);
+
+    }
+    getInitialState()
+    {
+        return ()=>this.login_check();
     }
 
     login()
@@ -50,18 +63,23 @@ class Account extends Component
         {
             this.login();
         }
-        else
-        {
-            this.logout();
-        }
+    }
+
+    handOnSubmit(values)
+    {
+
+    }
+
+    handleemailChange(e)
+    {
+
     }
 
     render()
     {
         return(
             <div>
-                <button onClick={this.login_check}>{this.props.login ? "Logout" : "Login"}</button>
-
+                <button onClick={this.login_check}>Login</button>
             </div>
         );
     }

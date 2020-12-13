@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import firebase from 'firebase';
 import TaskData from './TaskData';
 import Lib from "../static/address_lib";
+import { Router } from 'next/router';
 
 class WorkRecorder extends Component
 {
@@ -18,6 +19,7 @@ class WorkRecorder extends Component
             theme:"",
             selectedtheme:[],
             themehistorylist:[],
+            memo:"",
             isEnable:false,
         }
 
@@ -36,6 +38,7 @@ class WorkRecorder extends Component
         this.updateSelectedThemeView=this.updateSelectedThemeView.bind(this);
         this.updateThemeHistoryView=this.updateThemeHistoryView.bind(this);
         this.onChangeSelectedHistory=this.onChangeSelectedHistory.bind(this);
+        this.onChangememo=this.onChangememo.bind(this);
         this.getThemeListData();
     }
 
@@ -79,6 +82,8 @@ class WorkRecorder extends Component
         {
             worktime:this.state.hour+":"+this.state.minutes+":"+this.state.second,
             themes:this.themes,
+            starttime:this.state.starttime,
+            memo:this.state.memo,
         };
 
         this.registerDB(data);
@@ -236,6 +241,16 @@ class WorkRecorder extends Component
         this.updateSelectedThemeView();
     }
 
+    checklogin()
+    {
+        firebase.auth().onAuthStateChanged
+    }
+
+    onChangememo(e)
+    {
+        this.setState({memo:e.target.value});
+    }
+
     render()
     {
         return(
@@ -255,7 +270,8 @@ class WorkRecorder extends Component
                 <div>
                     {this.state.selectedtheme}
                 </div>
-                <button onClick={this.registerWork}>Register</button>
+                <input type="text" size="30" onChange={this.onChangememo}></input>
+                <button onClick={this.registerWork} disabled={!this.props.login}>Register</button>
             </div>
         );
     }

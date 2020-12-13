@@ -9,6 +9,5 @@ import WorkRecorder from '../components/WorkRecorder';
 export default ()=>(
     <Layout header="WorkLog" title="FireWorks">
         <Initialize/>
-        <WorkRecorder/>
     </Layout>
 );
