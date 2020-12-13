@@ -138,12 +138,18 @@ class WorkRecorder extends Component
 
     registerNewTheme(item)
     {
-        console.log(item);
+        console.log("theme"+this.themes[item]);
 
         let db=firebase.database();
-        let ref=db.ref("FireWorks/"+Lib.encodeEmail(this.props.email)+"/ThemeList");
+        let index=this.state.themehistory==null?0:this.state.themehistory.length;
+        let ref=db.ref("FireWorks/"+Lib.encodeEmail(this.props.email)+"/ThemeList/"+index);
         console.log(ref);
-        ref.set(item);
+        let data=
+        {
+            item:this.themes[item],
+        };
+        ref.set(data);
+        this.state.themehistory.concat(this.themes[item]);
     }
 
     
@@ -155,7 +161,7 @@ class WorkRecorder extends Component
                 hour:0,
                 minutes:0,
                 second:0,
-                themes:[],
+                theme:"",
                 isEnable:false,
             }
         );
