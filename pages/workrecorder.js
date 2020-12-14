@@ -5,9 +5,10 @@ import WorkRecorder from "../components/WorkRecorder";
 
 import Account from '../components/Account';
 
+
+
 export default ()=>(
     <Layout header="WorkRecorder" title="FireWorks">
         <WorkRecorder/>
-
     </Layout>
 );

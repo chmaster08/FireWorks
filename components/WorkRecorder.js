@@ -17,6 +17,10 @@ import IconButton from '@material-ui/core/IconButton';
 
 class WorkRecorder extends Component
 {
+    timeStyle=
+    {
+        fontSize:"40pt",
+    }
 
     paperStyle=
     {
@@ -294,9 +298,9 @@ class WorkRecorder extends Component
     render()
     {
         return(
-            <div>
+            <div >
                 <h1>WorkRecorder</h1>
-                <p>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
+                <p style={this.timeStyle}>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
                 <div>
                     <Button variant="contained" color="primary" onClick={this.startCount}>Start</Button>
                     <Button variant="contained" color="secondary" onClick={this.stopCount}>Stop</Button>
