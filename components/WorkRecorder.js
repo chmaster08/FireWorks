@@ -3,10 +3,38 @@ import {connect} from 'react-redux';
 import firebase from 'firebase';
 import TaskData from './TaskData';
 import Lib from "../static/address_lib";
-import { Router } from 'next/router';
+import Router from 'next/router';
+import { Button, InputLabel } from '@material-ui/core';
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import {makeStyles} from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 
 class WorkRecorder extends Component
 {
+
+    paperStyle=
+    {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 300,
+    }
+    
+    selectstyle=
+    {
+        margin:"1px",
+        minWidth:120,
+    }
+
+    themestyle={
+        margin:"10px",
+    }
     constructor(props)
     {
         super(props);
@@ -183,7 +211,7 @@ class WorkRecorder extends Component
         for(let item in this.themes)
         {
             dom.push(
-                <p key={item}>{this.themes[item]}</p>
+                <a key={item} style={this.themestyle}>{this.themes[item]}</a>
             );
         }
         this.setState({selectedtheme:dom});
@@ -194,7 +222,7 @@ class WorkRecorder extends Component
         let dom=[];
         for(let item in this.themehistory)
         {
-            dom.push(<option value={this.themehistory[item]}>{this.themehistory[item]}</option>);
+            dom.push(<MenuItem value={this.themehistory[item]}>{this.themehistory[item]}</MenuItem>);
         }
         this.setState({themehistorylist:dom});
 
@@ -212,6 +240,7 @@ class WorkRecorder extends Component
                 theme:"",
                 selectedtheme:[],
                 themehistorylist:[],
+                memo:"",
                 isEnable:false,
             }
         );
@@ -243,12 +272,23 @@ class WorkRecorder extends Component
 
     checklogin()
     {
-        firebase.auth().onAuthStateChanged
+        firebase.auth().onAuthStateChanged((user)=>
+        {
+            if(!user)
+            {
+                Router.push("/");
+            }
+        })
     }
 
     onChangememo(e)
     {
         this.setState({memo:e.target.value});
+    }
+
+    componentWillMount()
+    {
+        this.updateThemeHistoryView();
     }
 
     render()
@@ -258,20 +298,30 @@ class WorkRecorder extends Component
                 <h1>WorkRecorder</h1>
                 <p>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
                 <div>
-                    <button onClick={this.startCount}>Start</button>
-                    <button onClick={this.stopCount}>Stop</button>
-                    <button onClick={this.resetCount}>Reset</button>
+                    <Button variant="contained" color="primary" onClick={this.startCount}>Start</Button>
+                    <Button variant="contained" color="secondary" onClick={this.stopCount}>Stop</Button>
+                    <Button variant="contained" onClick={this.resetCount}>Reset</Button>
                 </div>
-                <input type="text" size="30" value={this.state.theme} onChange={this.onChangeTheme}/>
-                <button onClick={this.AddThemeAction}>AddTheme</button>
-                <select size="10" onChange={this.onChangeSelectedHistory}>
+                <div>
+                    <input type="text" size="30" value={this.state.theme} onChange={this.onChangeTheme}/>
+                    <Button onClick={this.AddThemeAction} variant="contained" color="secondary">Add</Button>
+                </div>
+                
+                <FormControl className={this.formControl}>
+                    <InputLabel>Theme</InputLabel>
+                        <Select size="5" onChange={this.onChangeSelectedHistory} style={this.selectstyle}>
                     {this.state.themehistorylist}
-                </select>
+                    </Select>
+                </FormControl>
+                <br/>
                 <div>
                     {this.state.selectedtheme}
                 </div>
-                <input type="text" size="30" onChange={this.onChangememo}></input>
-                <button onClick={this.registerWork} disabled={!this.props.login}>Register</button>
+                <br/>
+                <TextField variant="outlined" onChange={this.onChangememo}></TextField>
+                <br/>
+                <Button variant="contained" onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
+
             </div>
         );
     }

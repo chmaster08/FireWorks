@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import TaskData from './TaskData';
 import Lib from "../static/address_lib";
 import Router from 'next/router';
+import DataItem from './DataItem';
 
 
 
@@ -25,7 +26,7 @@ class DataGrid extends Component
         this.onRefreshTable=this.onRefreshTable.bind(this);
         this.updateDataTable=this.updateDataTable.bind(this);
         this.setDataList=this.setDataList.bind(this);
-        this.updateDataTable();
+        // this.updateDataTable();
         console.log("end constructor");
  
     }
@@ -66,12 +67,7 @@ class DataGrid extends Component
             console.log(i);
             console.log(data[i]);
             domlist.push(
-                <tr key={i}>
-                        <td>{this.getTagDOM(data[i].themes)}</td>
-                        <td>{data[i].worktime}</td>
-                        <td>{data[i].starttime}</td>
-                        <td>{data[i].memo}</td>
-                </tr>
+                <DataItem themes={data[i].themes} starttime={data[i].starttime} worktime={data[i].worktime} memo={data[i].memo}/>
             );
         }
         this.setState({dom:domlist});
@@ -83,6 +79,11 @@ class DataGrid extends Component
         this.updateDataTable();
     }
 
+    componentWillMount()
+    {
+        this.updateDataTable();
+        console.log("before render");
+    }
     render()
     {
         console.log("renderrrr");

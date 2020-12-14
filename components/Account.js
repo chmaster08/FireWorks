@@ -65,15 +65,12 @@ class Account extends Component
         }
     }
 
-    handOnSubmit(values)
+    componentDidMount()
     {
-
+        this.login_check();
+        console.log("componentDidMount");
     }
 
-    handleemailChange(e)
-    {
-
-    }
 
     render()
     {
