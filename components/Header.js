@@ -2,10 +2,18 @@ import React,{Component} from 'react';
 import Link from "next/link";
 import Account from './Account';
 import Router from 'next/router';
+import { Button, InputLabel } from '@material-ui/core';
+
 
 
 class Header extends Component
 {
+    headerStyle=
+    {
+        width:"auto",
+        height:"50",
+    }
+
     constructor(props)
     {
         super(props);
@@ -20,18 +28,18 @@ class Header extends Component
     render()
     {
         return(
-            <header>
+            <header style={this.headerStyle}>
                 <div>
                     <p>{this.props.header}</p>
                     <Account onLogined={this.login}/>
                     <Link href="/workrecorder">
-                        <button>Record</button>
+                        <Button variant="contained">Record</Button>
                     </Link>
                     <Link href="/datalist">
-                        <button>datalist</button>
+                        <Button variant="contained">datalist</Button>
                     </Link>
                     <Link href="/analize">
-                        <button>analize</button>
+                        <Button variant="contained">analize</Button>
                     </Link>
                 </div>
                 <h1>{this.props.title}</h1>

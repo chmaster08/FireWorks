@@ -76,8 +76,6 @@ class Account extends Component
     {
         return(
             <div>
-                <button onClick={this.login_check}>Login</button>
-                <button onClick={this.logout}>Logout</button>
             </div>
         );
     }

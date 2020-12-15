@@ -298,7 +298,7 @@ class WorkRecorder extends Component
     render()
     {
         return(
-            <div >
+            <div>
                 <h1>WorkRecorder</h1>
                 <p style={this.timeStyle}>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
                 <div>

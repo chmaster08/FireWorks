@@ -4,6 +4,11 @@ import Footer from './Footer';
 
 class Layout extends Component
 {
+    style=
+    {
+        width:"300px",
+        margin:"0px auto",
+    }
     render()
     {
         return(
