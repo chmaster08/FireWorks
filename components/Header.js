@@ -3,6 +3,9 @@ import Link from "next/link";
 import Account from './Account';
 import Router from 'next/router';
 import { Button, InputLabel } from '@material-ui/core';
+import style from '../static/Style';
+import Container from '@material-ui/core/Container';
+
 
 
 
@@ -10,8 +13,7 @@ class Header extends Component
 {
     headerStyle=
     {
-        width:"auto",
-        height:"50",
+        alignItems:"center",
     }
 
     constructor(props)
@@ -29,7 +31,8 @@ class Header extends Component
     {
         return(
             <header style={this.headerStyle}>
-                <div>
+                {style}
+                <Container>
                     <p>{this.props.header}</p>
                     <Account onLogined={this.login}/>
                     <Link href="/workrecorder">
@@ -41,8 +44,7 @@ class Header extends Component
                     <Link href="/analize">
                         <Button variant="contained">analize</Button>
                     </Link>
-                </div>
-                <h1>{this.props.title}</h1>
+                </Container>
             </header>
         );
     }

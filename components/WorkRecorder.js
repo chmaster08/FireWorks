@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import firebase from 'firebase';
 import TaskData from './TaskData';
 import Lib from "../static/address_lib";
+import style from "../static/Style";
 import Router from 'next/router';
 import { Button, InputLabel } from '@material-ui/core';
 import Select from "@material-ui/core/Select";
@@ -14,20 +15,24 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Container from '@material-ui/core/Container';
+import Chip from '@material-ui/core/Chip';
+
 
 class WorkRecorder extends Component
 {
     timeStyle=
     {
         fontSize:"40pt",
+        alignItems:"center",
     }
+
 
     paperStyle=
     {
         padding: '2px 4px',
-        display: 'flex',
         alignItems: 'center',
-        width: 300,
+        width:"20@x"
     }
     
     selectstyle=
@@ -55,6 +60,18 @@ class WorkRecorder extends Component
             isEnable:false,
         }
 
+        this.useStyles = makeStyles((theme) => ({
+            root: {
+              display: 'flex',
+              '& > *': {
+                margin: theme.spacing(1),
+                width: theme.spacing(16),
+                height: theme.spacing(16),
+              },
+            },
+          }));
+
+
         this.themes=[];
         this.themehistory=[];
 
@@ -71,7 +88,11 @@ class WorkRecorder extends Component
         this.updateThemeHistoryView=this.updateThemeHistoryView.bind(this);
         this.onChangeSelectedHistory=this.onChangeSelectedHistory.bind(this);
         this.onChangememo=this.onChangememo.bind(this);
+        this.useStyle=this.useStyle.bind(this);
+        this.onDeleteThemes=this.onDeleteThemes.bind(this);
         this.getThemeListData();
+        this.ppStyle=this.useStyle();
+
     }
 
     countUp()
@@ -89,6 +110,23 @@ class WorkRecorder extends Component
         );
         }
         
+    }
+
+    useStyle()
+    {
+        return(
+            makeStyles((theme) => ({
+                root: {
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  '& > *': {
+                    margin: theme.spacing(1),
+                    width: theme.spacing(16),
+                    height: theme.spacing(16),
+                  },
+                },
+              }))
+        );
     }
 
     startCount()
@@ -215,7 +253,7 @@ class WorkRecorder extends Component
         for(let item in this.themes)
         {
             dom.push(
-                <a key={item} style={this.themestyle}>{this.themes[item]}</a>
+                <Chip label={this.themes[item]} onDelete={this.onDeleteThemes(item)}/>
             );
         }
         this.setState({selectedtheme:dom});
@@ -295,38 +333,53 @@ class WorkRecorder extends Component
         this.updateThemeHistoryView();
     }
 
+    onDeleteThemes(e)
+    {
+        console.log(e);
+        let ar=[];
+        ar=Object.assign({},...this.state.selectedtheme);
+        let arr=Array.from(ar);
+        if(e>=0)
+        {
+            arr.splice(e,1);
+            this.setState({selectedtheme:arr});
+        }
+    }
+
     render()
     {
         return(
-            <div>
-                <h1>WorkRecorder</h1>
+            <Container>
+                {style}
                 <p style={this.timeStyle}>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
-                <div>
+                <Container>
                     <Button variant="contained" color="primary" onClick={this.startCount}>Start</Button>
                     <Button variant="contained" color="secondary" onClick={this.stopCount}>Stop</Button>
                     <Button variant="contained" onClick={this.resetCount}>Reset</Button>
-                </div>
-                <div>
-                    <input type="text" size="30" value={this.state.theme} onChange={this.onChangeTheme}/>
+                </Container>
+                <br/>
+                <Paper className={this.ppStyle.root}>
+                    {this.state.selectedtheme}
+                </Paper>
+                <Container>
+                    <TextField variant="standard" value={this.state.theme} onChange={this.onChangeTheme}/>
                     <Button onClick={this.AddThemeAction} variant="contained" color="secondary">Add</Button>
-                </div>
-                
-                <FormControl className={this.formControl}>
+                </Container>
+                <FormControl >
                     <InputLabel>Theme</InputLabel>
                         <Select size="5" onChange={this.onChangeSelectedHistory} style={this.selectstyle}>
                     {this.state.themehistorylist}
                     </Select>
                 </FormControl>
                 <br/>
-                <div>
-                    {this.state.selectedtheme}
-                </div>
                 <br/>
-                <TextField variant="outlined" onChange={this.onChangememo}></TextField>
-                <br/>
-                <Button variant="contained" onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
-
-            </div>
+                <Container>
+                    <TextField variant="outlined" onChange={this.onChangememo}></TextField>
+                    <br></br>
+                    <Button variant="contained" onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
+                </Container>
+                
+            </Container>
         );
     }
 }

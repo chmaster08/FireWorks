@@ -8,4 +8,12 @@ export default <style>{`
         text-align:right;
         color:red;
     }
+    p{
+        text-align:center;
+    }
+
+    .buttonclass
+    {
+        margin:0 auto;
+    }
 `}</style>;
