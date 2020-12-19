@@ -125,6 +125,11 @@ class WorkRecorder extends Component
                     height: theme.spacing(16),
                   },
                 },
+                bu: {
+                    '& > *': {
+                      margin: theme.spacing(2),
+                    },
+                  },
               }))
         );
     }
@@ -352,7 +357,7 @@ class WorkRecorder extends Component
             <Container>
                 {style}
                 <p style={this.timeStyle}>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
-                <Container>
+                <Container className={this.ppStyle.bu}>
                     <Button variant="contained" color="primary" onClick={this.startCount}>Start</Button>
                     <Button variant="contained" color="secondary" onClick={this.stopCount}>Stop</Button>
                     <Button variant="contained" onClick={this.resetCount}>Reset</Button>
