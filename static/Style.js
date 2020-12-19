@@ -3,5 +3,10 @@ export default <style>{`
         text-align:center;
     }
 
+    test
+    {
+        margin:50%;
+    }
+
     
 `}</style>;

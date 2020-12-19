@@ -111,7 +111,7 @@ class WorkRecorder extends Component
             {
                 second:("0"+(Number(this.state.second)+1)%60).slice(-2),
                 minutes:("0"+(Number(this.state.minutes)+incmin)%60).slice(-2),
-                hour:("0"+(Number(this.state.hour)+inchour)).slice(-2),
+                hour:Number(this.state.hour)>=10?Number(this.state.hour)+inchour:("0"+(Number(this.state.hour)+inchour)).slice(-2),
             }
         );
         }
@@ -263,7 +263,7 @@ class WorkRecorder extends Component
         for(let item in this.themes)
         {
             dom.push(
-                <Chip label={this.themes[item]} onDelete={this.onDeleteThemes(item)}/>
+                <Chip color="primary" label={this.themes[item]} onDelete={()=>this.onDeleteThemes(item)}/>
             );
         }
         this.setState({selectedtheme:dom});
@@ -348,13 +348,16 @@ class WorkRecorder extends Component
     {
         console.log(e);
         let ar=[];
-        ar=Object.assign({},...this.state.selectedtheme);
-        let arr=Array.from(ar);
-        if(e>=0)
+        for(let i in this.themes)
         {
-            arr.splice(e,1);
-            this.setState({selectedtheme:arr});
+            if(i!=e)
+            {
+                ar.push(this.themes[i]);
+            }
         }
+        this.themes=ar;
+        this.updateSelectedThemeView();
+        
     }
 
     render()
