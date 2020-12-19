@@ -24,7 +24,10 @@ class Lib
         var hour_str = date.getHours();
         var minute_str = date.getMinutes();
         var second_str = date.getSeconds();
-        
+
+        hour_str=("0"+hour_str).slice(-2);
+        minute_str=("0"+minute_str).slice(-2);
+        second_str=("0"+second_str).slice(-2);        
         
         let format_str = 'YYYY-MM-DD hh:mm:ss';
         format_str = format_str.replace(/YYYY/g, year_str);
@@ -36,6 +39,22 @@ class Lib
         
         return format_str;
        };
+
+    static GetDateFromString(str)
+    {
+        let datesp=str.split("-");
+        let year=datesp[0];
+        let month=datesp[1];
+        let date=datesp[2].split(" ")[0];
+
+        let timesp=str.split(" ")[1].split(":");
+
+        let hour=timesp[0];
+        let minutes=timesp[1];
+        let second=timesp[2];
+        let ret=new Date(year,month-1,date,hour,minutes,second)
+        return ret;
+    }
 }
 
 export default Lib;

@@ -27,6 +27,7 @@ class DataGridComp extends Component
         this.onRefreshTable=this.onRefreshTable.bind(this);
         this.updateDataTable=this.updateDataTable.bind(this);
         this.setDataList=this.setDataList.bind(this);
+        this.onSelectTableItem=this.onSelectTableItem.bind(this);
         // this.updateDataTable();
         this.columns=[
             {field:'id',headerName:'StartTime',width:200},
@@ -86,6 +87,11 @@ class DataGridComp extends Component
         this.datalist=[];
         this.updateDataTable();
     }
+    onSelectTableItem(e,item)
+    {
+        console.log(e);
+        console.log(item);
+    }
 
     componentWillMount()
     {
@@ -96,8 +102,8 @@ class DataGridComp extends Component
     {
         console.log("renderrrr");
         return(
-            <div style={{ height: 600, width: '100%' }}>
-                <DataGrid rows={this.state.rows} columns={this.columns} pageSize={20} checkboxSelection />
+            <div style={{ height:800,width:950, justifyContent:"center",margin:"0px auto",padding:"20px"}} onChange={this.onSelectTableItem}>
+                <DataGrid rows={this.state.rows} columns={this.columns} pageSize={15} checkboxSelection />
             </div>
             // <div>
             //     <button onClick={this.onRefreshTable}>refresh</button>

@@ -54,14 +54,15 @@ class WorkRecorder extends Component
         this.state=
         {
             starttime:"",
-            hour:0,
-            minutes:0,
-            second:0,
+            hour:"00",
+            minutes:"00",
+            second:"00",
             theme:"",
             selectedtheme:[],
             themehistorylist:[],
             memo:"",
             isEnable:false,
+            canRegister:false,
         }
 
         this.useStyles = makeStyles((theme) => ({
@@ -104,13 +105,13 @@ class WorkRecorder extends Component
     {
         if(this.state.isEnable)
         {
-            let incmin=Math.floor((this.state.second+1)/60);
-            let inchour=Math.floor((this.state.minutes+incmin)/60);
+            let incmin=Math.floor((Number(this.state.second)+1)/60);
+            let inchour=Math.floor((Number(this.state.minutes)+incmin)/60);
             this.setState(
             {
-                second:(this.state.second+1)%60,
-                minutes:(this.state.minutes+incmin)%60,
-                hour:(this.state.hour+inchour),
+                second:("0"+(Number(this.state.second)+1)%60).slice(-2),
+                minutes:("0"+(Number(this.state.minutes)+incmin)%60).slice(-2),
+                hour:("0"+(Number(this.state.hour)+inchour)).slice(-2),
             }
         );
         }
@@ -126,7 +127,7 @@ class WorkRecorder extends Component
                     flexDirection: 'column',
                     alignItems: 'center',
                   '& > *': {
-                    margin: theme.spacing(1),
+                    margin: theme.spacing(10),
                   },
                 },
                 bu: {
@@ -147,7 +148,7 @@ class WorkRecorder extends Component
 
     stopCount()
     {
-        this.setState({isEnable:false});
+        this.setState({isEnable:false,canRegister:true});
     }
 
     registerWork()
@@ -285,14 +286,15 @@ class WorkRecorder extends Component
         this.setState(
             {
                 starttime:"",
-                hour:0,
-                minutes:0,
-                second:0,
+                hour:"00",
+                minutes:"00",
+                second:"00",
                 theme:"",
                 selectedtheme:[],
                 themehistorylist:[],
                 memo:"",
                 isEnable:false,
+                canRegister:false,
             }
         );
         this.themes=[];
@@ -367,7 +369,7 @@ class WorkRecorder extends Component
                     <Button variant="contained" onClick={this.resetCount}>Reset</Button>
                 </ButtonGroup>
                 <br/>
-                <Paper className={this.ppStyle.root} style={{width:"50",height:"50",display:"fixed"}}>
+                <Paper style={{width:"50",height:"50",margin:"15px"}}>
                     {this.state.selectedtheme}
                 </Paper>
                 <Container style={{display: 'flex', justifyContent: 'center'}}>
@@ -384,7 +386,7 @@ class WorkRecorder extends Component
                 <Container style={{display:"flex",justifyContent:"center"}}>
                     <TextField variant="outlined" onChange={this.onChangememo}></TextField>
                 </Container>
-                <Button variant="contained" style={{justifyContent:"center",display:"flex",margin:"0px auto"}} onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
+                <Button variant="contained" style={{justifyContent:"center",display:"flex",margin:"0px auto"}} onClick={this.registerWork} disabled={!this.state.canRegister}>Register</Button>
             </div>
         );
     }
