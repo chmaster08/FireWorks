@@ -17,13 +17,14 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Chip from '@material-ui/core/Chip';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 
 class WorkRecorder extends Component
 {
     timeStyle=
     {
-        fontSize:"40pt",
+        fontSize:"50pt",
         alignItems:"center",
     }
 
@@ -32,13 +33,16 @@ class WorkRecorder extends Component
     {
         padding: '2px 4px',
         alignItems: 'center',
-        width:"20@x"
+        width:"20px"
     }
     
     selectstyle=
     {
-        margin:"1px",
+        margin:"0px auto",
         minWidth:120,
+        maxWidth:200,
+        justifyContent:"center",
+        display:"flex",
     }
 
     themestyle={
@@ -92,6 +96,7 @@ class WorkRecorder extends Component
         this.onDeleteThemes=this.onDeleteThemes.bind(this);
         this.getThemeListData();
         this.ppStyle=this.useStyle();
+        console.log(this.ppStyle);
 
     }
 
@@ -117,17 +122,16 @@ class WorkRecorder extends Component
         return(
             makeStyles((theme) => ({
                 root: {
-                  display: 'flex',
-                  flexWrap: 'wrap',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                   '& > *': {
                     margin: theme.spacing(1),
-                    width: theme.spacing(16),
-                    height: theme.spacing(16),
                   },
                 },
                 bu: {
                     '& > *': {
-                      margin: theme.spacing(2),
+                      margin: theme.spacing(1),
                     },
                   },
               }))
@@ -354,37 +358,34 @@ class WorkRecorder extends Component
     render()
     {
         return(
-            <Container>
+            <div>
                 {style}
                 <p style={this.timeStyle}>{this.state.hour}:{this.state.minutes}:{this.state.second}</p>
-                <Container className={this.ppStyle.bu}>
+                <ButtonGroup style={{display: 'flex', justifyContent: 'center'}}>
                     <Button variant="contained" color="primary" onClick={this.startCount}>Start</Button>
                     <Button variant="contained" color="secondary" onClick={this.stopCount}>Stop</Button>
                     <Button variant="contained" onClick={this.resetCount}>Reset</Button>
-                </Container>
+                </ButtonGroup>
                 <br/>
-                <Paper className={this.ppStyle.root}>
+                <Paper className={this.ppStyle.root} style={{width:"50",height:"50",display:"fixed"}}>
                     {this.state.selectedtheme}
                 </Paper>
-                <Container>
+                <Container style={{display: 'flex', justifyContent: 'center'}}>
                     <TextField variant="standard" value={this.state.theme} onChange={this.onChangeTheme}/>
                     <Button onClick={this.AddThemeAction} variant="contained" color="secondary">Add</Button>
                 </Container>
-                <FormControl >
-                    <InputLabel>Theme</InputLabel>
+                <FormControl style={{display:"block", justifyContent: 'center',width:"50"}} >
                         <Select size="5" onChange={this.onChangeSelectedHistory} style={this.selectstyle}>
                     {this.state.themehistorylist}
                     </Select>
                 </FormControl>
                 <br/>
                 <br/>
-                <Container>
+                <Container style={{display:"flex",justifyContent:"center"}}>
                     <TextField variant="outlined" onChange={this.onChangememo}></TextField>
-                    <br></br>
-                    <Button variant="contained" onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
                 </Container>
-                
-            </Container>
+                <Button variant="contained" style={{justifyContent:"center",display:"flex",margin:"0px auto"}} onClick={this.registerWork} disabled={!this.props.login}>Register</Button>
+            </div>
         );
     }
 }

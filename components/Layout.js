@@ -12,7 +12,7 @@ class Layout extends Component
     render()
     {
         return(
-            <div>
+            <div style={{ width: '100%' }}>
                 <Header header={this.props.header} title={this.props.title}/>
                 {this.props.children}
                 <Footer footer="Copyright"/>

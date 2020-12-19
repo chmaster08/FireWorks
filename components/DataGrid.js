@@ -5,10 +5,10 @@ import TaskData from './TaskData';
 import Lib from "../static/address_lib";
 import Router from 'next/router';
 import DataItem from './DataItem';
+import { DataGrid } from '@material-ui/data-grid';
 
 
-
-class DataGrid extends Component
+class DataGridComp extends Component
 {
     constructor(props)
     {
@@ -20,6 +20,7 @@ class DataGrid extends Component
         this.state=
         {
             dom:[],
+            rows:[],
         }
 
         this.datalist=[];
@@ -27,8 +28,12 @@ class DataGrid extends Component
         this.updateDataTable=this.updateDataTable.bind(this);
         this.setDataList=this.setDataList.bind(this);
         // this.updateDataTable();
-        console.log("end constructor");
- 
+        this.columns=[
+            {field:'id',headerName:'StartTime',width:200},
+            {field:'themes',headerName:'Theme',width:200},
+            {field:'worktime',headerName:'WorkTime',width:200},
+            {field:'memo',headerName:'Memo',width:300},
+        ];
     }
 
     updateDataTable()
@@ -62,6 +67,7 @@ class DataGrid extends Component
     setDataList(data)
     {
         let domlist=[];
+        let datalist=[];
         for(let i in data)
         {
             console.log(i);
@@ -69,8 +75,10 @@ class DataGrid extends Component
             domlist.push(
                 <DataItem themes={data[i].themes} starttime={data[i].starttime} worktime={data[i].worktime} memo={data[i].memo}/>
             );
+            datalist.push({id:data[i].starttime,themes:data[i].themes,worktime:data[i].worktime,memo:data[i].memo});
         }
         this.setState({dom:domlist});
+        this.setState({rows:datalist});
     }
 
     onRefreshTable(e)
@@ -88,18 +96,21 @@ class DataGrid extends Component
     {
         console.log("renderrrr");
         return(
-            <div>
-                <button onClick={this.onRefreshTable}>refresh</button>
-            <table>
-                <tbody>
-                    {this.state.dom}
-                </tbody>
-            </table>
+            <div style={{ height: 600, width: '100%' }}>
+                <DataGrid rows={this.state.rows} columns={this.columns} pageSize={20} checkboxSelection />
             </div>
+            // <div>
+            //     <button onClick={this.onRefreshTable}>refresh</button>
+            // <table>
+            //     <tbody>
+            //         {this.state.dom}
+            //     </tbody>
+            // </table>
+            // </div>
             
         );
     }
 }
 
 
-export default connect((state)=>state)(DataGrid);
+export default connect((state)=>state)(DataGridComp);
