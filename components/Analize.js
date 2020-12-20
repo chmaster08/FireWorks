@@ -1,20 +1,48 @@
 import React,{Component} from 'react';
+import Lib from "../static/address_lib";
 import {connect} from 'react-redux';
 import firebase from 'firebase';
 import TaskData from './TaskData';
-import Lib from "../static/address_lib";
 import style from "../static/Style";
 import Router from 'next/router';
+import Enumerable from  "linq";
+import {PieChart ,Pie,Text,Tooltip,Cell,Sector,BarChart,Bar,XAxis,YAxis,CartesianGrid,Legend} from "recharts";
+import { Container } from 'next/app';
 
 class Analize extends Component
 {
     constructor(props)
     {
         super(props);
-        this.updateDataTable=this.updateDataTable.bind(this);
-        this.UpdateThemeList=this.UpdateThemeList.bind(this);
+        this.state=
+        {
+            monthlyThemeHour:[],
+            PieData:[],
+
+        }
         this.datalist=[];
         this.themelist=[];
+        this.monthlyThemeData=[];
+        this.PieLable="";
+        this.updateDataTable=this.updateDataTable.bind(this);
+        this.UpdateThemeList=this.UpdateThemeList.bind(this);
+        this.CalcMonthlyThemeHour=this.CalcMonthlyThemeHour.bind(this);
+        this.SetPieData=this.SetPieData.bind(this);
+        this.timeCompareFunc=this.timeCompareFunc.bind(this);
+        this.COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+        this.RADIAN = Math.PI / 180;  
+        this.renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+         const x  = cx + radius * Math.cos(-midAngle * this.RADIAN);
+         const y = cy  + radius * Math.sin(-midAngle * this.RADIAN);
+        
+         return (
+           <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
+               {this.state.PieData[index].name+":"+`${(percent * 100).toFixed(0)}%`}
+           </text>
+         );
+       };
+
 
     }
 
@@ -57,12 +85,92 @@ class Analize extends Component
     {
         this.updateDataTable();
         this.UpdateThemeList();
-        console.log("before render");
+        this.CalcMonthlyThemeHour();
+        this.SetPieData();
     }
+
+    CalcMonthlyThemeHour()
+    {
+        let themear=[];
+        for(let i in this.themelist)
+        {
+            let data={hour:0,minutes:0,second:0,totalsec:0,theme:this.themelist[i]};
+            themear.push(data);
+        }
+        console.log(themear);
+
+        for(let i in this.datalist)
+        {
+            let containtheme=Array.from(this.datalist[i].themes);
+            let timearray=Lib.getWorkTimeArrayFromString(this.datalist[i].worktime);
+
+            for(let j in themear)
+            {
+                if(containtheme.indexOf(themear[j]["theme"])!=-1)
+                {
+                    let newh=themear[j].hour+timearray[0]+Math.floor((themear[j].minutes+timearray[1])/60);
+                    let newm=(themear[j].minutes+timearray[1])%60+Math.floor((themear[j].second+timearray[2])/60);
+                    let news=(themear[j].second+timearray[2])%60;
+                    let newtheme=themear[j].theme;
+                    let newtotal=news+newm*60+newh*3600;
+                    
+                    themear[j]={hour:newh,minutes:newm,second:news,totalsec:newtotal,theme:newtheme};
+                }
+            }
+
+            
+        }
+        console.log(themear);
+        themear.sort(this.timeCompareFunc);
+        this.setState({monthlyThemeHour:themear});
+        this.monthlyThemeData=themear;
+        console.log(this.monthlyThemeData);
+    }
+
+    SetPieData()
+    {
+        let retpiedata=[];
+        for(let item in this.monthlyThemeData)
+        {
+            retpiedata.push({index:item,name:this.monthlyThemeData[item].theme,value:this.monthlyThemeData[item].totalsec});
+        }
+        this.setState({PieData:retpiedata});
+    }
+
+    timeCompareFunc(a,b)
+    {
+        return b.totalsec-a.totalsec;
+    }
+
 
     render()
     {
-        return(<h1>Hello Analize</h1>);
+        return(
+            <div style={{display:'flex'}}>
+                <PieChart width={500} height={500}>
+                    <Pie
+                    data={this.state.PieData} 
+                    cx="50%" 
+                    cy="50%"
+                    labelLine={false}
+                    label={this.renderCustomizedLabel}
+                    fill="#8884d8"
+                    >
+                        {
+                        this.state.PieData.map((entry, index) => <Cell fill={this.COLORS[index % this.COLORS.length]}/>)
+                    }
+                    </Pie>
+                    <Tooltip/>
+                </PieChart>
+                <BarChart width={600} height={300} data={this.state.PieData} style={{marginTop:"100px"}}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="name"/>
+                    <YAxis/>
+                    <Tooltip/>
+                    <Bar dataKey="value" fill="#82ca9d"/>
+                </BarChart>
+            </div>
+            );
     }
 }
 

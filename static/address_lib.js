@@ -1,3 +1,4 @@
+import Enumerable from "linq";
 class Lib
 {
     static deepcopy(value)
@@ -54,6 +55,12 @@ class Lib
         let second=timesp[2];
         let ret=new Date(year,month-1,date,hour,minutes,second)
         return ret;
+    }
+
+    static getWorkTimeArrayFromString(str)
+    {
+        let timearray=str.split(":");
+        return Enumerable.from(timearray).select("x=>Number(x)").toArray();
     }
 }
 
