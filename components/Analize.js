@@ -8,6 +8,7 @@ import Router from 'next/router';
 import Enumerable from  "linq";
 import {PieChart ,Pie,Text,Tooltip,Cell,Sector,BarChart,Bar,XAxis,YAxis,CartesianGrid,Legend} from "recharts";
 import { Container } from 'next/app';
+import {DataGrid} from "@material-ui/data-grid";
 
 class Analize extends Component
 {
@@ -18,6 +19,8 @@ class Analize extends Component
         {
             monthlyThemeHour:[],
             PieData:[],
+            BarData:[],
+            GridData:[],
 
         }
         this.datalist=[];
@@ -29,6 +32,14 @@ class Analize extends Component
         this.CalcMonthlyThemeHour=this.CalcMonthlyThemeHour.bind(this);
         this.SetPieData=this.SetPieData.bind(this);
         this.timeCompareFunc=this.timeCompareFunc.bind(this);
+        this.setDataGridData=this.setDataGridData.bind(this);
+        this.SetBarData=this.SetBarData.bind(this);
+
+        this.columns=[
+            {field:'id',headerName:'rank',width:80},
+            {field:'theme',headerName:'Theme',width:100},
+            {field:'worktime',headerName:'WorkTime',width:100},
+        ];
         this.COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         this.RADIAN = Math.PI / 180;  
         this.renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
@@ -87,6 +98,8 @@ class Analize extends Component
         this.UpdateThemeList();
         this.CalcMonthlyThemeHour();
         this.SetPieData();
+        this.setDataGridData();
+        this.SetBarData();
     }
 
     CalcMonthlyThemeHour()
@@ -94,7 +107,7 @@ class Analize extends Component
         let themear=[];
         for(let i in this.themelist)
         {
-            let data={hour:0,minutes:0,second:0,totalsec:0,theme:this.themelist[i]};
+            let data={hour:0,minutes:0,second:0,totalsec:0,totalhour:0,theme:this.themelist[i]};
             themear.push(data);
         }
         console.log(themear);
@@ -113,8 +126,9 @@ class Analize extends Component
                     let news=(themear[j].second+timearray[2])%60;
                     let newtheme=themear[j].theme;
                     let newtotal=news+newm*60+newh*3600;
+                    let newtotalhour=newh+newm/60;
                     
-                    themear[j]={hour:newh,minutes:newm,second:news,totalsec:newtotal,theme:newtheme};
+                    themear[j]={hour:newh,minutes:newm,second:news,totalsec:newtotal,totalhour:newtotalhour,theme:newtheme};
                 }
             }
 
@@ -135,6 +149,26 @@ class Analize extends Component
             retpiedata.push({index:item,name:this.monthlyThemeData[item].theme,value:this.monthlyThemeData[item].totalsec});
         }
         this.setState({PieData:retpiedata});
+    }
+    SetBarData()
+    {
+        let retpiedata=[];
+        for(let item in this.monthlyThemeData)
+        {
+            retpiedata.push({index:item,name:this.monthlyThemeData[item].theme,value:parseFloat(this.monthlyThemeData[item].totalhour).toFixed(2)});
+        }
+        this.setState({BarData:retpiedata});
+    }
+
+    setDataGridData()
+    {
+        let retdatagrid=[];
+        for(let item in this.monthlyThemeData)
+        {
+            retdatagrid.push({id:Number(item)+1,theme:this.monthlyThemeData[item].theme,worktime:parseFloat(this.monthlyThemeData[item].totalhour).toFixed(2)});
+        }
+
+        this.setState({GridData:retdatagrid});
     }
 
     timeCompareFunc(a,b)
@@ -162,13 +196,16 @@ class Analize extends Component
                     </Pie>
                     <Tooltip/>
                 </PieChart>
-                <BarChart width={600} height={300} data={this.state.PieData} style={{marginTop:"100px"}}>
+                <BarChart width={600} height={300} data={this.state.BarData} style={{marginTop:"100px"}}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="name"/>
                     <YAxis/>
                     <Tooltip/>
                     <Bar dataKey="value" fill="#82ca9d"/>
                 </BarChart>
+                <div style={{ height:300,width:290, justifyContent:"center",margin:"0px auto",paddingTop:"20px"}} onChange={this.onSelectTableItem}>
+                    <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={1} />
+                </div>
             </div>
             );
     }
