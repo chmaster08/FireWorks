@@ -59,6 +59,7 @@ class WorkRecorder extends Component
             second:"00",
             theme:"",
             selectedtheme:[],
+            selectedthemeItem:"",
             themehistorylist:[],
             memo:"",
             isEnable:false,
@@ -293,6 +294,7 @@ class WorkRecorder extends Component
                 second:"00",
                 theme:"",
                 selectedtheme:[],
+                selectedthemeItem:"",
                 themehistorylist:[],
                 memo:"",
                 isEnable:false,
@@ -323,6 +325,7 @@ class WorkRecorder extends Component
     onChangeSelectedHistory(e)
     {
         this.addTheme(e.target.value);
+        this.setState({selectedthemeItem:""});
         this.updateSelectedThemeView();
         this.checkCanRegister();
     }
@@ -402,7 +405,7 @@ class WorkRecorder extends Component
                     <Button onClick={this.AddThemeAction} variant="contained" color="secondary">Add</Button>
                 </Container>
                 <FormControl style={{display:"block", justifyContent: 'center',width:"50"}} >
-                        <Select size="5" onChange={this.onChangeSelectedHistory} style={this.selectstyle}>
+                        <Select size="5" onChange={this.onChangeSelectedHistory} style={this.selectstyle} value={this.state.selectedthemeItem}>
                     {this.state.themehistorylist}
                     </Select>
                 </FormControl>
