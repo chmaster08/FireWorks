@@ -95,6 +95,7 @@ class WorkRecorder extends Component
         this.onChangememo=this.onChangememo.bind(this);
         this.useStyle=this.useStyle.bind(this);
         this.onDeleteThemes=this.onDeleteThemes.bind(this);
+        this.checkCanRegister=this.checkCanRegister.bind(this);
         this.getThemeListData();
         this.ppStyle=this.useStyle();
         console.log(this.ppStyle);
@@ -148,7 +149,8 @@ class WorkRecorder extends Component
 
     stopCount()
     {
-        this.setState({isEnable:false,canRegister:true});
+        this.setState({isEnable:false});
+        this.checkCanRegister();
     }
 
     registerWork()
@@ -314,6 +316,7 @@ class WorkRecorder extends Component
             this.setState({theme:""});
             this.updateSelectedThemeView();
         }
+        this.checkCanRegister();
         
     }
 
@@ -321,6 +324,7 @@ class WorkRecorder extends Component
     {
         this.addTheme(e.target.value);
         this.updateSelectedThemeView();
+        this.checkCanRegister();
     }
 
     checklogin()
@@ -357,7 +361,25 @@ class WorkRecorder extends Component
         }
         this.themes=ar;
         this.updateSelectedThemeView();
+        this.checkCanRegister();
         
+    }
+
+    checkCanRegister()
+    {
+        if(this.state.hour=="00" && this.state.minutes=="00" && this.state.second=="00")
+        {
+            this.setState({canRegister:false});
+            return;
+        }
+
+        if(this.themes.length==0)
+        {
+            this.setState({canRegister:false});
+            return;
+        }
+
+        this.setState({canRegister:true});
     }
 
     render()
