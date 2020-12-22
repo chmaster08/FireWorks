@@ -9,6 +9,9 @@ import Enumerable from  "linq";
 import {PieChart ,Pie,Text,Tooltip,Cell,Sector,BarChart,Bar,XAxis,YAxis,CartesianGrid,Legend} from "recharts";
 import { Container } from 'next/app';
 import {DataGrid} from "@material-ui/data-grid";
+import Paper from '@material-ui/core/Paper';
+import  MediaQuery from "react-responsive";
+
 
 class Analize extends Component
 {
@@ -43,7 +46,7 @@ class Analize extends Component
         this.COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         this.RADIAN = Math.PI / 180;  
         this.renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+            const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
          const x  = cx + radius * Math.cos(-midAngle * this.RADIAN);
          const y = cy  + radius * Math.sin(-midAngle * this.RADIAN);
         
@@ -92,15 +95,7 @@ class Analize extends Component
         console.log(this.themelist);
     }
 
-    componentWillMount()
-    {
-        this.updateDataTable();
-        this.UpdateThemeList();
-        this.CalcMonthlyThemeHour();
-        this.SetPieData();
-        this.setDataGridData();
-        this.SetBarData();
-    }
+    
 
     CalcMonthlyThemeHour()
     {
@@ -176,37 +171,92 @@ class Analize extends Component
         return b.totalsec-a.totalsec;
     }
 
+    componentWillMount()
+    {
+        this.updateDataTable();
+        this.UpdateThemeList();
+        this.CalcMonthlyThemeHour();
+        this.SetPieData();
+        this.setDataGridData();
+        this.SetBarData();
+    }
+
 
     render()
     {
         return(
-            <div style={{display:'flex'}}>
-                <PieChart width={500} height={500}>
-                    <Pie
-                    data={this.state.PieData} 
-                    cx="50%" 
-                    cy="50%"
-                    labelLine={false}
-                    label={this.renderCustomizedLabel}
-                    fill="#8884d8"
-                    >
-                        {
-                        this.state.PieData.map((entry, index) => <Cell fill={this.COLORS[index % this.COLORS.length]}/>)
-                    }
-                    </Pie>
-                    <Tooltip/>
-                </PieChart>
-                <BarChart width={600} height={300} data={this.state.BarData} style={{marginTop:"100px"}}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="name"/>
-                    <YAxis/>
-                    <Tooltip/>
-                    <Bar dataKey="value" fill="#82ca9d"/>
-                </BarChart>
-                <div style={{ height:300,width:290, justifyContent:"center",margin:"0px auto",paddingTop:"20px"}} onChange={this.onSelectTableItem}>
-                    <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
-                </div>
-            </div>
+            <Container style={{display:"flex"}}>
+                <MediaQuery query="(max-width:767px)">
+                    <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px"}}>
+                        <Paper elevation={3} style={{margin:"5px"}}>
+                            <div style={{ height:350,width:350}} onChange={this.onSelectTableItem}>
+                                <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
+                            </div>
+                        </Paper>
+                        <Paper elevation="1" style={{margin:"5px"}}>
+                            <PieChart width={350} height={350}>
+                                <Pie
+                                data={this.state.PieData} 
+                                cx="50%" 
+                                cy="50%"
+                                labelLine={false}
+                                label={this.renderCustomizedLabel}
+                                fill="#8884d8"
+                                >
+                                    {
+                                    this.state.PieData.map((entry, index) => <Cell fill={this.COLORS[index % this.COLORS.length]}/>)
+                                }
+                                </Pie>
+                            </PieChart>
+                        </Paper>
+                        <Paper elevation={3} style={{margin:"5px"}}>
+                            <BarChart width={350} height={350} data={this.state.BarData}>
+                                <CartesianGrid strokeDasharray="3 3"/>
+                                <XAxis dataKey="name"/>
+                                <YAxis/>
+                                <Tooltip/>
+                                <Bar dataKey="value" fill="#82ca9d"/>
+                            </BarChart>
+                        </Paper>
+                        
+                    </div>
+                </MediaQuery>
+                <MediaQuery query="(min-width:767px)">
+                <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px",justifyContent:"center"}}>
+                        <Paper elevation={3} style={{margin:"10px",width:"500px"}}>
+                            <PieChart width={400} height={400}>
+                                <Pie
+                                data={this.state.PieData} 
+                                cx="50%" 
+                                cy="50%"
+                                labelLine={false}
+                                label={this.renderCustomizedLabel}
+                                fill="#8884d8"
+                                >
+                                    {
+                                    this.state.PieData.map((entry, index) => <Cell fill={this.COLORS[index % this.COLORS.length]}/>)
+                                }
+                                </Pie>
+                            </PieChart>
+                        </Paper>
+                        <Paper elevation="4" style={{margin:"10px",width:"500px"}}>
+                            <BarChart width={400} height={300} data={this.state.BarData} style={{marginTop:"50px"}}>
+                                <CartesianGrid strokeDasharray="3 3"/>
+                                <XAxis dataKey="name"/>
+                                <YAxis/>
+                                <Tooltip/>
+                                <Bar dataKey="value" fill="#82ca9d"/>
+                            </BarChart>
+                        </Paper>
+                        <Paper elevation="4" style={{margin:"10px",width:"500px"}}>
+                            <div style={{ height:350,width:400, justifyContent:"center",margin:"0px auto",paddingTop:"30px"}} onChange={this.onSelectTableItem}>
+                                <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
+                            </div>
+                        </Paper>
+                    </div>
+                </MediaQuery>
+            </Container>
+            
             );
     }
 }
