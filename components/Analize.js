@@ -204,7 +204,7 @@ class Analize extends Component
                     <Bar dataKey="value" fill="#82ca9d"/>
                 </BarChart>
                 <div style={{ height:300,width:290, justifyContent:"center",margin:"0px auto",paddingTop:"20px"}} onChange={this.onSelectTableItem}>
-                    <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={1} />
+                    <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
                 </div>
             </div>
             );
