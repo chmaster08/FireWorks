@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 import Account from '../components/Account';
 
 export default ()=>(
-    <Container maxWidth="sm">
+    <Container>
         <Layout header="WorkRecorder" title="FireWorks" style={{margin:"auto",width:"50%"}}>
             <Analize/>
         </Layout>

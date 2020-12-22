@@ -189,12 +189,12 @@ class Analize extends Component
                 <MediaQuery query="(max-width:767px)">
                     <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px"}}>
                         <Paper elevation={3} style={{margin:"5px"}}>
-                            <div style={{ height:350,width:350}} onChange={this.onSelectTableItem}>
+                            <div style={{ height:340,width:340}} onChange={this.onSelectTableItem}>
                                 <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
                             </div>
                         </Paper>
-                        <Paper elevation="1" style={{margin:"5px"}}>
-                            <PieChart width={350} height={350}>
+                        <Paper elevation={3} style={{margin:"5px"}}>
+                            <PieChart width={340} height={340}>
                                 <Pie
                                 data={this.state.PieData} 
                                 cx="50%" 
@@ -210,7 +210,7 @@ class Analize extends Component
                             </PieChart>
                         </Paper>
                         <Paper elevation={3} style={{margin:"5px"}}>
-                            <BarChart width={350} height={350} data={this.state.BarData}>
+                            <BarChart width={325} height={330} data={this.state.BarData} style={{marginRight:"25px",marginTop:"10px",marginLeft:"-10px"}}>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="name"/>
                                 <YAxis/>
@@ -222,8 +222,13 @@ class Analize extends Component
                     </div>
                 </MediaQuery>
                 <MediaQuery query="(min-width:767px)">
-                <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px",justifyContent:"center"}}>
-                        <Paper elevation={3} style={{margin:"10px",width:"500px"}}>
+                    <div style={{display:"flex",marginTop:"20px"}}>
+                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
+                            <div style={{ height:350,width:400,paddingTop:"20px",margin:"10px"}} onChange={this.onSelectTableItem}>
+                                <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
+                            </div>
+                        </Paper>
+                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
                             <PieChart width={400} height={400}>
                                 <Pie
                                 data={this.state.PieData} 
@@ -239,19 +244,14 @@ class Analize extends Component
                                 </Pie>
                             </PieChart>
                         </Paper>
-                        <Paper elevation="4" style={{margin:"10px",width:"500px"}}>
-                            <BarChart width={400} height={300} data={this.state.BarData} style={{marginTop:"50px"}}>
+                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
+                            <BarChart width={400} height={300} data={this.state.BarData} style={{marginTop:"50px",marginRight:"15px",marginLeft:"-15px"}}>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="name"/>
                                 <YAxis/>
                                 <Tooltip/>
                                 <Bar dataKey="value" fill="#82ca9d"/>
                             </BarChart>
-                        </Paper>
-                        <Paper elevation="4" style={{margin:"10px",width:"500px"}}>
-                            <div style={{ height:350,width:400, justifyContent:"center",margin:"0px auto",paddingTop:"30px"}} onChange={this.onSelectTableItem}>
-                                <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
-                            </div>
                         </Paper>
                     </div>
                 </MediaQuery>

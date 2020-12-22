@@ -14,7 +14,7 @@ const style={
 
 
 export default ()=>(
-    <Container maxWidth="sm">
+    <Container>
         <Layout header="WorkRecorder" title="FireWorks" style={style}>
             <WorkRecorder/>
         </Layout>
