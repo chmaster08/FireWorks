@@ -130,22 +130,6 @@ class DataGridComp extends Component
                 </MediaQuery>
             </Container>
         );
-        if(this.props.isResonsible)
-        {
-              return(
-                <div style={{ height:800,width:750, justifyContent:"center",margin:"0px auto",padding:"20px"}} onChange={this.onSelectTableItem}>
-                    <DataGrid rows={this.state.rows} columns={this.narrowcolumns} pageSize={15} checkboxSelection />
-                </div> 
-              );  
-        }
-        else
-        {
-            return(
-                <div style={{ height:800,width:950, justifyContent:"center",margin:"0px auto",padding:"20px"}} onChange={this.onSelectTableItem}>
-                    <DataGrid rows={this.state.rows} columns={this.widecolumns} pageSize={15} checkboxSelection />
-                </div> 
-            );
-        }
     }
 }
 
