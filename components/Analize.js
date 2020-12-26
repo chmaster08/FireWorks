@@ -11,6 +11,9 @@ import { Container } from 'next/app';
 import {DataGrid} from "@material-ui/data-grid";
 import Paper from '@material-ui/core/Paper';
 import  MediaQuery from "react-responsive";
+import CalendarHeatmap from 'react-calendar-heatmap';
+import { ListSubheader } from '@material-ui/core';
+import 'react-calendar-heatmap/dist/styles.css';
 
 
 class Analize extends Component
@@ -24,12 +27,15 @@ class Analize extends Component
             PieData:[],
             BarData:[],
             GridData:[],
+            heatcount:[],
 
         }
         this.datalist=[];
         this.themelist=[];
         this.monthlyThemeData=[];
         this.PieLable="";
+        this.heatstart=new Date();
+        this.heatend=new Date();
         this.updateDataTable=this.updateDataTable.bind(this);
         this.UpdateThemeList=this.UpdateThemeList.bind(this);
         this.CalcMonthlyThemeHour=this.CalcMonthlyThemeHour.bind(this);
@@ -37,6 +43,7 @@ class Analize extends Component
         this.timeCompareFunc=this.timeCompareFunc.bind(this);
         this.setDataGridData=this.setDataGridData.bind(this);
         this.SetBarData=this.SetBarData.bind(this);
+        this.setHeatMap=this.setHeatMap.bind(this);
 
         this.columns=[
             {field:'id',headerName:'rank',width:80},
@@ -166,6 +173,34 @@ class Analize extends Component
         this.setState({GridData:retdatagrid});
     }
 
+    setHeatMap()
+    {
+        let data=new Date();
+        let localheatcount=[];
+        this.heatstart=this.heatstart.setFullYear(this.heatstart.getFullYear()-1);
+        for(let item in this.datalist)
+        {
+            let startd=Lib.GetDateFromString(this.datalist[item].starttime);
+            let datestring=startd.toLocaleDateString("ja").split("/").join("-");
+            console.log(datestring);
+            if(localheatcount[datestring]==undefined)
+            {
+                localheatcount[datestring]=1;
+            }
+            else
+            {
+                localheatcount[datestring]+=1;
+            }
+        }
+
+        for(let item in localheatcount)
+        {
+            this.state.heatcount.push({date:item,count:localheatcount[item]});
+            console.log(item);
+            console.log(localheatcount[item]);
+        }
+    }
+
     timeCompareFunc(a,b)
     {
         return b.totalsec-a.totalsec;
@@ -179,6 +214,7 @@ class Analize extends Component
         this.SetPieData();
         this.setDataGridData();
         this.SetBarData();
+        this.setHeatMap();
     }
 
 
@@ -188,12 +224,12 @@ class Analize extends Component
             <Container style={{display:"flex"}}>
                 <MediaQuery query="(max-width:767px)">
                     <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px"}}>
-                        <Paper elevation={3} style={{margin:"5px"}}>
+                        <Paper elevation={3} style={{marginBottom:"5px"}}>
                             <div style={{ height:340,width:340}} onChange={this.onSelectTableItem}>
                                 <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
                             </div>
                         </Paper>
-                        <Paper elevation={3} style={{margin:"5px"}}>
+                        <Paper elevation={3} style={{marginBottom:"5px"}}>
                             <PieChart width={340} height={340}>
                                 <Pie
                                 data={this.state.PieData} 
@@ -209,7 +245,7 @@ class Analize extends Component
                                 </Pie>
                             </PieChart>
                         </Paper>
-                        <Paper elevation={3} style={{margin:"5px"}}>
+                        <Paper elevation={3} style={{marginBottom:"5px"}}>
                             <BarChart width={325} height={330} data={this.state.BarData} style={{marginRight:"25px",marginTop:"10px",marginLeft:"-10px"}}>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="name"/>
@@ -223,12 +259,12 @@ class Analize extends Component
                 </MediaQuery>
                 <MediaQuery query="(min-width:767px)">
                     <div style={{display:"flex",marginTop:"20px"}}>
-                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
+                        <Paper elevation={3} style={{marginRight:"10px",width:"500px",height:"400px"}}>
                             <div style={{ height:350,width:400,paddingTop:"20px",margin:"10px"}} onChange={this.onSelectTableItem}>
                                 <DataGrid rows={this.state.GridData} columns={this.columns} pageSize={5} />
                             </div>
                         </Paper>
-                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
+                        <Paper elevation={3} style={{marginRight:"10px",width:"500px",height:"400px"}}>
                             <PieChart width={400} height={400}>
                                 <Pie
                                 data={this.state.PieData} 
@@ -244,7 +280,7 @@ class Analize extends Component
                                 </Pie>
                             </PieChart>
                         </Paper>
-                        <Paper elevation={3} style={{margin:"10px",width:"500px",height:"400px"}}>
+                        <Paper elevation={3} style={{marginRight:"10px",width:"500px",height:"400px"}}>
                             <BarChart width={400} height={300} data={this.state.BarData} style={{marginTop:"50px",marginRight:"15px",marginLeft:"-15px"}}>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="name"/>
@@ -253,7 +289,11 @@ class Analize extends Component
                                 <Bar dataKey="value" fill="#82ca9d"/>
                             </BarChart>
                         </Paper>
+                        
                     </div>
+                    <Paper elevation={3} style={{marginTop:"10px",width:"1200px",height:"200px",padding:"20px"}}>
+                        <CalendarHeatmap startDate={this.heatstart} endDate={this.heatend}  values={this.state.heatcount}/>
+                    </Paper>
                 </MediaQuery>
             </Container>
             
