@@ -57,6 +57,7 @@ class WorkRecorder extends Component
             hour:"00",
             minutes:"00",
             second:"00",
+            endtime:"",
             theme:"",
             selectedtheme:[],
             selectedthemeItem:"",
