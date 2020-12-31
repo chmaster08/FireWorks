@@ -30,6 +30,7 @@ class Analize extends Component
             PieData:[],
             BarData:[],
             GridData:[],
+            CalendarData[],
             heatcount:[],
 
         }
