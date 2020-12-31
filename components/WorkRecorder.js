@@ -152,6 +152,7 @@ class WorkRecorder extends Component
     stopCount()
     {
         this.setState({isEnable:false});
+        this.setState({endtime:Lib.getStringFromDate(new Date())});
         this.checkCanRegister();
     }
 
@@ -167,6 +168,7 @@ class WorkRecorder extends Component
             worktime:this.state.hour+":"+this.state.minutes+":"+this.state.second,
             themes:this.themes,
             starttime:this.state.starttime,
+            endtime:this.state.endtime,
             memo:this.state.memo,
         };
 
@@ -293,6 +295,7 @@ class WorkRecorder extends Component
                 hour:"00",
                 minutes:"00",
                 second:"00",
+                endtime:"",
                 theme:"",
                 selectedtheme:[],
                 selectedthemeItem:"",
