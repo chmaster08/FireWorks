@@ -14,6 +14,9 @@ import  MediaQuery from "react-responsive";
 import CalendarHeatmap from 'react-calendar-heatmap';
 import { ListSubheader } from '@material-ui/core';
 import 'react-calendar-heatmap/dist/styles.css';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
 
 
 class Analize extends Component
