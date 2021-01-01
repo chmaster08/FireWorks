@@ -30,11 +30,12 @@ class Analize extends Component
             PieData:[],
             BarData:[],
             GridData:[],
-            CalendarData[],
+            CalendarData:[],
             heatcount:[],
 
         }
         this.datalist=[];
+        this.yearlylist=[];
         this.themelist=[];
         this.monthlyThemeData=[];
         this.PieLable="";
@@ -75,7 +76,10 @@ class Analize extends Component
     {
         let email=Lib.encodeEmail(this.props.email);
         let db=firebase.database();
-        let ref=db.ref('FireWorks/'+Lib.encodeEmail(this.props.email)+'/WorkDataList');
+        let startmonth=new Date();
+        startmonth.setDate(1);
+        console.log(Lib.getStringFromDate(Lib.getFirstDate(startmonth)));
+        let ref=db.ref('FireWorks/'+Lib.encodeEmail(this.props.email)+'/WorkDataList').orderByKey().startAt(Lib.getStringFromDate(Lib.getFirstDate(startmonth)));
         let self=this;
         ref.on("value",(snapshot)=>{
             let d=Lib.deepcopy(snapshot.val());
@@ -85,7 +89,15 @@ class Analize extends Component
                 this.datalist=d;
             }
             });
-        console.log(this.datalist);
+        let yearref=db.ref('FireWorks/'+Lib.encodeEmail(this.props.email)+'/WorkDataList');
+        yearref.on("value",(snapshot)=>{
+            let d=Lib.deepcopy(snapshot.val());
+            console.log(d);
+            if(d!=null)
+            {
+                this.yearlylist=d;
+            }
+            });
     }
 
 
@@ -177,14 +189,19 @@ class Analize extends Component
         this.setState({GridData:retdatagrid});
     }
 
+    setCalendarData()
+    {
+        
+    }
+
     setHeatMap()
     {
         let data=new Date();
         let localheatcount=[];
         this.heatstart=this.heatstart.setFullYear(this.heatstart.getFullYear()-1);
-        for(let item in this.datalist)
+        for(let item in this.yearlylist)
         {
-            let startd=Lib.GetDateFromString(this.datalist[item].starttime);
+            let startd=Lib.GetDateFromString(this.yearlylist[item].starttime);
             let datestring=startd.toLocaleDateString("ja").split("/").join("-");
             console.log(datestring);
             if(localheatcount[datestring]==undefined)

@@ -62,6 +62,11 @@ class Lib
         let timearray=str.split(":");
         return Enumerable.from(timearray).select("x=>Number(x)").toArray();
     }
+
+    static getFirstDate(date)
+    {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    }
 }
 
 export default Lib;
