@@ -41,6 +41,7 @@ class Analize extends Component
         this.PieLable="";
         this.heatstart=new Date();
         this.heatend=new Date();
+        this.localizer=momentLocalizer(moment);
         this.updateDataTable=this.updateDataTable.bind(this);
         this.UpdateThemeList=this.UpdateThemeList.bind(this);
         this.CalcMonthlyThemeHour=this.CalcMonthlyThemeHour.bind(this);
