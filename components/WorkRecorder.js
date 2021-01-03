@@ -152,8 +152,8 @@ class WorkRecorder extends Component
     stopCount()
     {
         this.setState({isEnable:false});
-        this.setState({endtime:Lib.getStringFromDate(new Date())});
-        this.checkCanRegister();
+        let etime=Lib.getStringFromDate(new Date());
+        this.setState({endtime:etime},()=>this.checkCanRegister());
     }
 
     registerWork()
@@ -377,12 +377,21 @@ class WorkRecorder extends Component
         if(this.state.hour=="00" && this.state.minutes=="00" && this.state.second=="00")
         {
             this.setState({canRegister:false});
+            console.log("not start yet");
             return;
         }
 
         if(this.themes.length==0)
         {
             this.setState({canRegister:false});
+            console.log("no theme");
+            return;
+        }
+
+        if(this.state.endtime=="")
+        {
+            this.setState({canRegister:false});
+            console.log("not yet stop");
             return;
         }
 
