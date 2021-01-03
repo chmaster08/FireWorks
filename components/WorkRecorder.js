@@ -81,6 +81,7 @@ class WorkRecorder extends Component
 
         this.themes=[];
         this.themehistory=[];
+        this.timerCounter;
 
         this.startCount=this.startCount.bind(this);
         this.stopCount=this.stopCount.bind(this);
@@ -146,12 +147,13 @@ class WorkRecorder extends Component
     {
         let timenow=Lib.getStringFromDate(new Date());
         this.setState({isEnable:true,starttime:timenow});
-        setInterval(()=>this.countUp(),1000);
+        this.timerCounter=setInterval(()=>this.countUp(),1000);
     }
 
     stopCount()
     {
         this.setState({isEnable:false});
+        clearInterval(this.timerCounter);
         let etime=Lib.getStringFromDate(new Date());
         this.setState({endtime:etime},()=>this.checkCanRegister());
     }
